@@ -16,9 +16,9 @@ import os
 #import scipy.io
 from collections import defaultdict
 from theano.tensor.shared_randomstreams import RandomStreams
-import utils
-import models
-import optimizers
+from modules import utils
+from modules import models
+from modules import optimizers
 
 #from scipy.optimize import minimize
 
@@ -28,7 +28,7 @@ dtype = theano.config.floatX
 class ControlHawkesCTSM(object):
     # This is a seq 2 seq model train_er
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_end : T * size_batch -- T - t_i
         seq_time_to_current : T * T * size_batch --
@@ -94,10 +94,10 @@ class ControlHawkesCTSM(object):
                 adam_params=None
             )
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         if 'learn_rate' in settings:
-            print "learn rate is set to : ", settings['learn_rate']
+            print("learn rate is set to : "), settings['learn_rate']
             self.adam_optimizer.set_learn_rate(
                 settings['learn_rate']
             )
@@ -107,7 +107,7 @@ class ControlHawkesCTSM(object):
             list_constrain = range(3)
         )
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 self.seq_time_to_end,
@@ -125,7 +125,7 @@ class ControlHawkesCTSM(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 self.seq_time_to_end,
@@ -143,7 +143,7 @@ class ControlHawkesCTSM(object):
             ]
         )
         if settings['predict_lambda']:
-            print "compiling dev function for intensity computation ... "
+            print("compiling dev function for intensity computation ... ")
             self.hawkes_ctsm.compute_lambda(
                 self.seq_type_event,
                 self.seq_sims_time_to_current,
@@ -172,7 +172,7 @@ class ControlHawkesCTSM(object):
 class ControlHawkesInhibCTSM(object):
     # This is a seq 2 seq model train_er
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_end : T * size_batch -- T - t_i
         seq_time_to_current : T * T * size_batch --
@@ -231,7 +231,7 @@ class ControlHawkesInhibCTSM(object):
             )
             list_constrain = [0, 3]
         else:
-            print "called wrong controller"
+            print("called wrong controller")
         #
         #
         self.hawkes_ctsm.compute_loss(
@@ -255,14 +255,14 @@ class ControlHawkesInhibCTSM(object):
         elif settings['optimizer'] == 'sgd':
             self.adam_optimizer = optimizers.SGD(adam_params=None)
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
             list_constrain = list_constrain
         )
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -284,7 +284,7 @@ class ControlHawkesInhibCTSM(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -315,7 +315,7 @@ class ControlHawkesInhibCTSM(object):
 class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -388,14 +388,14 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
             )
             list_constrain = [0]
         else:
-            print "called wrong controller"
+            print("called wrong controller")
         #
         assert(
             settings['loss_type'] == 'loglikehood' or settings['loss_type'] == 'prediction'
         )
         #
         if settings['loss_type'] == 'loglikehood':
-            print "train with log-likelihood ... "
+            print("train with log-likelihood ... ")
             self.hawkes_ctsm.compute_loss(
                 #self.seq_time_to_end,
                 self.seq_time_to_current,
@@ -410,7 +410,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                 self.seq_sims_mask
             )
         else:
-            print "train with prediction ... "
+            print("train with prediction ... ")
             #TODO: need to add switch for less memory
             #or faster speed
             #self.hawkes_ctsm.compute_prediction_loss(
@@ -440,10 +440,10 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                 adam_params=None
             )
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         if 'learn_rate' in settings:
-            print "learn rate is set to : ", settings['learn_rate']
+            print("learn rate is set to : "), settings['learn_rate']
             self.adam_optimizer.set_learn_rate(
                 settings['learn_rate']
             )
@@ -455,8 +455,8 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
         # in this version, no hard constraints on parameters
         #
         if settings['loss_type'] == 'loglikehood':
-            print "optimize loglikehood ... "
-            print "compiling training function ... "
+            print("optimize loglikehood ... ")
+            print("compiling training function ... ")
             self.model_learn = theano.function(
                 inputs = [
                     self.seq_time_to_current,
@@ -478,7 +478,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                 updates = self.adam_optimizer.updates,
                 on_unused_input='ignore'
             )
-            print "compiling dev function ... "
+            print("compiling dev function ... ")
             self.model_dev = theano.function(
                 inputs = [
                     #self.seq_time_to_end,
@@ -502,7 +502,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                 on_unused_input='ignore'
             )
             if settings['predict_lambda']:
-                print "compiling dev function for intensity computation ... "
+                print("compiling dev function for intensity computation ... ")
                 self.hawkes_ctsm.compute_lambda(
                     self.seq_type_event,
                     self.seq_time_values,
@@ -525,8 +525,8 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                     on_unused_input='ignore'
                 )
         else:
-            print "optimize prediction ... "
-            print "compiling training function ... "
+            print("optimize prediction ... ")
+            print("compiling training function ... ")
             self.model_learn = theano.function(
                 inputs = [
                     self.seq_type_event,
@@ -544,7 +544,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
                 updates = self.adam_optimizer.updates,
                 on_unused_input='ignore'
             )
-            print "compiling dev function ... "
+            print("compiling dev function ... ")
             self.model_dev = theano.function(
                 inputs = [
                     self.seq_type_event,
@@ -595,7 +595,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM_time(object):
 class ControlNeuralHawkesCTSM(object):
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -662,14 +662,14 @@ class ControlNeuralHawkesCTSM(object):
         elif settings['optimizer'] == 'sgd':
             self.adam_optimizer = optimizers.SGD(adam_params=None)
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
             list_constrain = [1]
         )
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -691,7 +691,7 @@ class ControlNeuralHawkesCTSM(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -723,7 +723,7 @@ class ControlNeuralHawkesCTSM(object):
 class ControlGeneralizedNeuralHawkesCTSM(object):
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -796,7 +796,7 @@ class ControlGeneralizedNeuralHawkesCTSM(object):
                 adam_params=None
             )
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
@@ -804,7 +804,7 @@ class ControlGeneralizedNeuralHawkesCTSM(object):
         )
         # in this version, no hard constraints on parameters
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -826,7 +826,7 @@ class ControlGeneralizedNeuralHawkesCTSM(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -858,7 +858,7 @@ class ControlGeneralizedNeuralHawkesCTSM(object):
 class ControlNeuralHawkesAdaptiveBaseCTSM(object):
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -931,7 +931,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM(object):
                 adam_params=None
             )
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
@@ -939,7 +939,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM(object):
         )
         # in this version, no hard constraints on parameters
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -961,7 +961,7 @@ class ControlNeuralHawkesAdaptiveBaseCTSM(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -999,7 +999,7 @@ class ControlNeuralHawkesCTSM_time(object):
     '''
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -1071,14 +1071,14 @@ class ControlNeuralHawkesCTSM_time(object):
         elif settings['optimizer'] == 'sgd':
             self.adam_optimizer = optimizers.SGD(adam_params=None)
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
             list_constrain = [1]
         )
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -1101,7 +1101,7 @@ class ControlNeuralHawkesCTSM_time(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -1134,7 +1134,7 @@ class ControlNeuralHawkesCTSM_time(object):
 class ControlGeneralizedNeuralHawkesCTSM_time(object):
     #
     def __init__(self, settings):
-        print "building controller ... "
+        print("building controller ... ")
         '''
         seq_time_to_current : T * size_batch -- t_i - t_i-1
         seq_type_event : (T+1) * size_batch -- k_i
@@ -1212,7 +1212,7 @@ class ControlGeneralizedNeuralHawkesCTSM_time(object):
                 adam_params=None
             )
         else:
-            print "Choose a optimizer ! "
+            print("Choose a optimizer ! ")
         #
         self.adam_optimizer.compute_updates(
             self.hawkes_ctsm.params, self.hawkes_ctsm.grad_params,
@@ -1220,7 +1220,7 @@ class ControlGeneralizedNeuralHawkesCTSM_time(object):
         )
         # in this version, no hard constraints on parameters
         #
-        print "compiling training function ... "
+        print("compiling training function ... ")
         self.model_learn = theano.function(
             inputs = [
                 #self.seq_time_to_end,
@@ -1243,7 +1243,7 @@ class ControlGeneralizedNeuralHawkesCTSM_time(object):
             ],
             updates = self.adam_optimizer.updates
         )
-        print "compiling dev function ... "
+        print("compiling dev function ... ")
         self.model_dev = theano.function(
             inputs = [
                 #self.seq_time_to_end,

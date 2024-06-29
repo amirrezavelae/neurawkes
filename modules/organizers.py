@@ -18,7 +18,7 @@ import fnmatch
 #import scipy.io
 from collections import defaultdict
 from theano.tensor.shared_randomstreams import RandomStreams
-import utils
+from modules import utils
 import csv
 
 dtype=theano.config.floatX
@@ -26,7 +26,7 @@ dtype=theano.config.floatX
 class LogOrg(object):
     #
     def __init__(self, settings):
-        print "log files organizer ... "
+        print("log files organizer ... ")
         self.path_tracks = settings['path_tracks']
         if self.path_tracks == None:
             self.path_tracks = os.path.abspath(
@@ -45,8 +45,8 @@ class LogOrg(object):
             str_log = f.read()
         #
         if 'The best model info is' not in str_log:
-            print "Here is a unfinished training : "
-            print path_log
+            print("Here is a unfinished training : ")
+            print (path_log)
             #TODO: the training is not finished
             #so we can grab the best info as the current best
             segment_args = str_log.split(
@@ -106,7 +106,7 @@ class LogOrg(object):
     def read_logs(self):
         self.list_logs = []
         #
-        print "reading and parsing all the log files ... "
+        print("reading and parsing all the log files ... ")
         #
         for path, dirs, files in os.walk(self.path_tracks):
             for name_file in fnmatch.filter(files, 'log.txt'):
@@ -120,12 +120,12 @@ class LogOrg(object):
                 #
             #
         #
-        print "done ! "
+        print("done ! ")
         #
     #
     #
     def get_one_log(self, idx_log=0):
-        print "getting one log idx : ", idx_log
+        print("getting one log idx : "), idx_log
         assert(len(self.list_logs)>0 )
         #path_save = os.path.abspath(path_save)
         #path_save = path_save + '/' + 'logs.csv'
@@ -133,7 +133,7 @@ class LogOrg(object):
         return dict_args
     #
     def save_csv(self, path_save):
-        print "saving logs into a csv ... "
+        print("saving logs into a csv ... ")
         assert(len(self.list_logs)>0 )
         path_save = os.path.abspath(path_save)
         #path_save = path_save + '/' + 'logs.csv'
@@ -155,7 +155,7 @@ class LogOrg(object):
                     dict_args
                 )
             #
-        print "done ! "
+        print("done ! ")
         #
     #
 #

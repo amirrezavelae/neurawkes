@@ -19,11 +19,17 @@ import sys
 #import scipy.io
 from collections import defaultdict
 from theano.tensor.shared_randomstreams import RandomStreams
-import modules.utils as utils
-import modules.models as models
-import modules.optimizers as optimizers
-import modules.controllers as controllers
-import modules.data_processers as data_processers
+
+# import modules.utils as utils
+# import modules.models as models
+# import modules.optimizers as optimizers
+# import modules.controllers as controllers
+# import modules.data_processers as data_processers
+from modules import utils
+from modules import models
+from modules import optimizers
+from modules import controllers
+from modules import data_processers
 
 import run_models
 import datetime
@@ -160,6 +166,7 @@ def main():
     We only use this setting when compared with them on their dataset
     Otherwise, we use dev/validation set to tune params and early stop, and only eval on test after the model is fixed.
     '''
+
     #
     #
     args = parser.parse_args()
@@ -413,7 +420,7 @@ def main():
                 input_train, tag_neural_type = 'adaptive'
             )
     else:
-        print "Model not implemented yet !!! "
+        print ("Model not implemented yet !!! ")
     #
 
 if __name__ == "__main__": main()

@@ -17,7 +17,7 @@ import os
 #import scipy.io
 from collections import defaultdict
 from theano.tensor.shared_randomstreams import RandomStreams
-import utils
+# import utils
 
 dtype=theano.config.floatX
 
@@ -27,7 +27,7 @@ class HawkesCTSM(object):
     def __init__(self, settings):
         self.size_batch = settings['size_batch']
         self.coef_l2 = settings['coef_l2']
-        print "initializing Hawkes CTSM ... "
+        print("initializing Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             # initialize variables
@@ -117,7 +117,7 @@ class HawkesCTSM(object):
         seq_mask : T * size_batch -- 1/0
         seq_mask_to_current : T * T * size_batch -- 1/0
         '''
-        print "computing loss function of Hawkes model ... "
+        print("computing loss function of Hawkes model ... ")
         # first compute the 3rd term in loss
         alpha_over_seq = self.alpha[
             :, seq_type_event
@@ -247,7 +247,7 @@ class HawkesCTSM(object):
         seq_sims_mask : N * size_batch
         seq_sims_mask_to_current : N * T * size_batch
         '''
-        print "computing intensity ... "
+        print("computing intensity ... ")
         # first compute the 3rd term in loss
         alpha_over_seq = self.alpha[
             :, seq_type_event
@@ -277,7 +277,7 @@ class HawkesCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -296,7 +296,7 @@ class HawkesInhibCTSM_scale(object):
     def __init__(self, settings):
         self.size_batch = settings['size_batch']
         self.coef_l2 = settings['coef_l2']
-        print "initializing Hawkes CTSM ... "
+        print("initializing Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             # initialize variables
@@ -424,7 +424,7 @@ class HawkesInhibCTSM_scale(object):
         #
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Hawkes model ... "
+        print("computing loss function of Hawkes model ... ")
         # first compute the 3rd term in loss
         alpha_over_seq = self.alpha[
             :, seq_type_event
@@ -563,7 +563,7 @@ class HawkesInhibCTSM_scale(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -590,7 +590,7 @@ class NeuralHawkesCTLSTM(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Neural Hawkes with Continuous-time LSTM ... "
+        print("initializing Neural Hawkes with Continuous-time LSTM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -858,7 +858,7 @@ class NeuralHawkesCTLSTM(object):
         seq_sims_mask : N * size_batch -- 1/0
         Warning: There is overlap between seq_time_values and seq_time_to_current, so in this function, we happen not to use both. So we need to put on_unused_input='warn' in theano.function to avoid error message.
         '''
-        print "computing loss function of Neural Hawkes model with continuous-time LSTM ... "
+        print("computing loss function of Neural Hawkes model with continuous-time LSTM ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -1111,7 +1111,7 @@ class NeuralHawkesCTLSTM(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -1262,7 +1262,7 @@ class NeuralHawkesCTLSTM(object):
         time_diffs
     ):
         #
-        print "computing predictions loss for neural Hawkes with continuous-time LSTM ... "
+        print("computing predictions loss for neural Hawkes with continuous-time LSTM ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         #
         initial_hidden_mat = tensor.outer(
@@ -1543,8 +1543,8 @@ class NeuralHawkesCTLSTM(object):
         time_diffs
     ):
         #
-        print "computing predictions loss of neural Hawkes with continuous-time LSTM ... "
-        print "memory efficient version ... "
+        print("computing predictions loss of neural Hawkes with continuous-time LSTM ... ")
+        print("memory efficient version ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         #
         initial_hidden_mat = tensor.outer(
@@ -1659,7 +1659,7 @@ class NeuralHawkesCTLSTM(object):
     #
     #
     def get_model(self):
-        print "getting model ... "
+        print("getting model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -1674,7 +1674,7 @@ class NeuralHawkesCTLSTM(object):
     #
     def save_model(self, file_save):
         model_dict = self.get_model()
-        print "saving model ... "
+        print("saving model ... ")
         with open(file_save, 'wb') as f:
             pickle.dump(model_dict, f)
         #
@@ -1703,7 +1703,7 @@ class HawkesInhibCTSM(object):
     def __init__(self, settings):
         self.size_batch = settings['size_batch']
         self.coef_l2 = settings['coef_l2']
-        print "initializing Hawkes CTSM ... "
+        print("initializing Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             # initialize variables
@@ -1801,7 +1801,7 @@ class HawkesInhibCTSM(object):
         #
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Hawkes model ... "
+        print("computing loss function of Hawkes model ... ")
         # first compute the 3rd term in loss
         alpha_over_seq = self.alpha[
             :, seq_type_event
@@ -1939,7 +1939,7 @@ class HawkesInhibCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -1960,7 +1960,7 @@ class NeuralHawkesCTSM(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Neural Hawkes CTSM ... "
+        print("initializing Neural Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -2148,7 +2148,7 @@ class NeuralHawkesCTSM(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -2355,7 +2355,7 @@ class NeuralHawkesCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -2376,7 +2376,7 @@ class GeneralizedNeuralHawkesCTSM(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes CTSM ... "
+        print("initializing Generalized Neural Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -2591,7 +2591,7 @@ class GeneralizedNeuralHawkesCTSM(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -2813,7 +2813,7 @@ class GeneralizedNeuralHawkesCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -2835,7 +2835,7 @@ class NeuralHawkesAdaptiveBaseCTSM(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... "
+        print("initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -3055,7 +3055,7 @@ class NeuralHawkesAdaptiveBaseCTSM(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -3288,7 +3288,7 @@ class NeuralHawkesAdaptiveBaseCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -3311,7 +3311,7 @@ class NeuralHawkesSimpleCTSM(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... "
+        print("initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -3509,7 +3509,7 @@ class NeuralHawkesSimpleCTSM(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -3731,7 +3731,7 @@ class NeuralHawkesSimpleCTSM(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -3757,7 +3757,7 @@ class NeuralHawkesCTSM_time(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Neural Hawkes CTSM ... "
+        print("initializing Neural Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -3964,7 +3964,7 @@ class NeuralHawkesCTSM_time(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -4183,7 +4183,7 @@ class NeuralHawkesCTSM_time(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -4208,7 +4208,7 @@ class GeneralizedNeuralHawkesCTSM_time(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes CTSM ... "
+        print("initializing Generalized Neural Hawkes CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -4436,7 +4436,7 @@ class GeneralizedNeuralHawkesCTSM_time(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -4671,7 +4671,7 @@ class GeneralizedNeuralHawkesCTSM_time(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -4693,7 +4693,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... "
+        print("initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -4802,7 +4802,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
             self.W_delta = theano.shared(
                 model_pre_train['W_delta'], name='W_delta'
             )
-            #print "W_delta is : "
+            #print("W_delta is : ")
             #print model_pre_train['W_delta']
             self.W_alpha = theano.shared(
                 model_pre_train['W_alpha'], name='W_alpha'
@@ -4935,7 +4935,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -5196,7 +5196,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
         sample diff time for each item in each batch
         same within one batch
         '''
-        print "computing predictions ... "
+        print("computing predictions ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         seq_time_rep = tensor.nnet.relu(
             seq_time_values[:,:,None] - self.Threshold_time[None,None,:]
@@ -5357,7 +5357,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
     #
     #
     def get_model(self):
-        print "getting model ... "
+        print("getting model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -5370,7 +5370,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -5396,7 +5396,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM with neural time encoder and scale s_k ... "
+        print("initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM with neural time encoder and scale s_k ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -5515,7 +5515,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
             self.W_delta = theano.shared(
                 model_pre_train['W_delta'], name='W_delta'
             )
-            #print "W_delta is : "
+            #print("W_delta is : ")
             #print model_pre_train['W_delta']
             self.W_alpha = theano.shared(
                 model_pre_train['W_alpha'], name='W_alpha'
@@ -5660,7 +5660,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -5914,7 +5914,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
         time_diffs
     ):
         #
-        print "computing predictions loss ... "
+        print("computing predictions loss ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         seq_time_rep = tensor.nnet.relu(
             seq_time_values[:,:,None] - self.Threshold_time[None,None,:]
@@ -6209,8 +6209,8 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
         time_diffs
     ):
         #
-        print "computing predictions loss ... "
-        print "memory efficient version ... "
+        print("computing predictions loss ... ")
+        print("memory efficient version ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         seq_time_rep = tensor.nnet.relu(
             seq_time_values[:,:,None] - self.Threshold_time[None,None,:]
@@ -6327,7 +6327,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
     #
     #
     def get_model(self):
-        print "getting model ... "
+        print("getting model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -6340,7 +6340,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -6369,7 +6369,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
         self.coef_l2 = settings['coef_l2']
         #
         #
-        print "initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM with neural time encoder and scale s_k ... "
+        print("initializing Generalized Neural Hawkes with Adaptive Base Rate CTSM with neural time encoder and scale s_k ... ")
         if settings['path_pre_train'] == None:
             self.dim_process = settings['dim_process']
             self.dim_time = settings['dim_time']
@@ -6469,7 +6469,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
             self.W_delta = theano.shared(
                 model_pre_train['W_delta'], name='W_delta'
             )
-            #print "W_delta is : "
+            #print("W_delta is : ")
             #print model_pre_train['W_delta']
             self.W_alpha = theano.shared(
                 model_pre_train['W_alpha'], name='W_alpha'
@@ -6618,7 +6618,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -6876,7 +6876,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
         seq_sims_index_in_hidden : N * size_batch -- int32
         seq_sims_mask : N * size_batch -- 1/0
         '''
-        print "computing loss function of Neural Hawkes model ... "
+        print("computing loss function of Neural Hawkes model ... ")
         #
         # we first process the past history of events with LSTM
         seq_emb_event = self.Emb_event[seq_type_event, :]
@@ -7022,7 +7022,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
         time_diffs
     ):
         #
-        print "computing predictions loss ... "
+        print("computing predictions loss ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         seq_time_rep = tensor.nnet.relu(
             seq_time_values[:,:,None] - self.Threshold_time[None,None,:]
@@ -7322,8 +7322,8 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
         time_diffs
     ):
         #
-        print "computing predictions loss ... "
-        print "memory efficient version ... "
+        print("computing predictions loss ... ")
+        print("memory efficient version ... ")
         seq_emb_event = self.Emb_event[seq_type_event, :]
         seq_time_rep = tensor.nnet.relu(
             seq_time_values[:,:,None] - self.Threshold_time[None,None,:]
@@ -7440,7 +7440,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
     #
     #
     def get_model(self):
-        print "getting model ... "
+        print("getting model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(
@@ -7453,7 +7453,7 @@ class NeuralHawkesAdaptiveBaseCTSM_time_scale_r(object):
     #
     #
     def save_model(self, file_save):
-        print "saving model ... "
+        print("saving model ... ")
         model_dict = {}
         for param in self.params:
             model_dict[param.name] = numpy.copy(

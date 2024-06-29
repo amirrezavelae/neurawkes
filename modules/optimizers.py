@@ -17,14 +17,14 @@ import os
 #import scipy.io
 from collections import defaultdict
 from theano.tensor.shared_randomstreams import RandomStreams
-import utils
+# import utils
 
 dtype=theano.config.floatX
 
 class SGD(object):
     # Adam optimizer
     def __init__(self, adam_params=None):
-        print "creating SGD optimizer ... "
+        print("creating SGD optimizer ... ")
         # set hyper params, and use the values in paper as default
         if adam_params == None:
             self.alpha = theano.shared(numpy.float32(1e-3), 'alpha')
@@ -43,7 +43,7 @@ class SGD(object):
     def compute_updates(
         self, params, grad_params, list_constrain = []
     ):
-        print "computing updates ... "
+        print("computing updates ... ")
         for idx_param, (param, grad_param) in enumerate(zip(params, grad_params) ):
             param_t = param - (
                 (self.alpha / self.t_step) + numpy.float32(1e-6)
@@ -57,13 +57,13 @@ class SGD(object):
                 self.updates.append( (param, param_t) )
             #
         self.updates.append( (self.t_step, self.t_step+1.0) )
-        print "updates computed ! "
+        print("updates computed ! ")
 
 
 class Adam(object):
     # Adam optimizer
     def __init__(self, adam_params=None):
-        print "creating Adam optimizer ... "
+        print("creating Adam optimizer ... ")
         # set hyper params, and use the values in paper as default
         if adam_params == None:
             self.alpha = theano.shared(numpy.float32(1e-3), 'alpha')
@@ -91,7 +91,7 @@ class Adam(object):
         self.clip_max = numpy.float32(5.0)
     #
     def set_learn_rate(self, learn_rate):
-        print "setting learning rate : ", learn_rate
+        print("setting learning rate : "), learn_rate
         self.alpha = theano.shared(
             numpy.float32(learn_rate), 'alpha'
         )
@@ -99,7 +99,7 @@ class Adam(object):
     def compute_updates(
         self, params, grad_params, list_constrain = []
     ):
-        print "computing updates ... "
+        print("computing updates ... ")
         for param in params:
             param_shape = numpy.shape(param.get_value())
             self.m_params.append(
@@ -135,4 +135,4 @@ class Adam(object):
             self.updates.append( (v_param, v_0) )
         self.updates.append( (self.t_step, self.t_step+1.0) )
         self.updates.append( (self.beta_t, self.beta_t*self.decay) )
-        print "updates computed ! "
+        print("updates computed ! ")

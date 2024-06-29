@@ -76,7 +76,7 @@ def train_hawkes_ctsm(input_train):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -98,7 +98,7 @@ def train_hawkes_ctsm(input_train):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -122,17 +122,17 @@ def train_hawkes_ctsm(input_train):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood, total_log_likelihood_time, total_log_likelihood_type = 0.0, 0.0, 0.0
         total_num_of_events = 0.0
@@ -142,7 +142,7 @@ def train_hawkes_ctsm(input_train):
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 'train', step_train,
@@ -150,7 +150,7 @@ def train_hawkes_ctsm(input_train):
                 predict_first = input_train['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_learn(
                 data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -184,15 +184,15 @@ def train_hawkes_ctsm(input_train):
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             #
-            #print "in training, the step is out of ", step_train, data_process.max_nums['train']
+            #print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -208,7 +208,7 @@ def train_hawkes_ctsm(input_train):
                         predict_first = input_train['predict_first']
                     )
                     #
-                    #print "validating ... "
+                    #print("validating ... ")
                     log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                         data_process.seq_time_to_end_numpy,
                         data_process.seq_time_to_current_numpy,
@@ -224,9 +224,9 @@ def train_hawkes_ctsm(input_train):
                     total_num_of_events_dev += num_of_events_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                     #
-                    #print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                    #print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -260,7 +260,7 @@ def train_hawkes_ctsm(input_train):
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
 #
 #
@@ -301,7 +301,7 @@ def test_hawkes_ctsm_and_save(input_test):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -321,7 +321,7 @@ def test_hawkes_ctsm_and_save(input_test):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -347,7 +347,7 @@ def test_hawkes_ctsm_and_save(input_test):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -360,7 +360,7 @@ def test_hawkes_ctsm_and_save(input_test):
         list_num_of_events = []
         #
         dev_start = time.time()
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         #TODO: get the dev loss values
         total_log_likelihood_dev = 0.0
@@ -375,7 +375,7 @@ def test_hawkes_ctsm_and_save(input_test):
                 predict_first = input_test['predict_first']
             )
             #
-            #print "validating for ", tag_split
+            #print("validating for "), tag_split
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -404,7 +404,7 @@ def test_hawkes_ctsm_and_save(input_test):
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -455,16 +455,16 @@ def test_hawkes_ctsm_and_save(input_test):
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
         #
-    print "finish testing"
+    print("finish testing")
 #
 #
 def test_intensity_and_save(input_test):
@@ -505,7 +505,7 @@ def test_intensity_and_save(input_test):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -525,7 +525,7 @@ def test_intensity_and_save(input_test):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -568,7 +568,7 @@ def test_intensity_and_save(input_test):
             model_settings
         )
     else:
-        print "wrong model, it is gonna crash"
+        print("wrong model, it is gonna crash")
     #
     if input_test['model_gold'] == 'hawkes':
         control_gold = controllers.ControlHawkesCTSM(
@@ -583,14 +583,14 @@ def test_intensity_and_save(input_test):
             model_settings_gold
         )
     else:
-        print "wrong model it is gonna crash"
+        print("wrong model it is gonna crash")
     #
     compile_end = time.time()
     compile_time = compile_end - compile_start
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -602,7 +602,7 @@ def test_intensity_and_save(input_test):
         list_num_of_samples = []
         #
         dev_start = time.time()
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         #TODO: get the dev loss values
         for step_dev in range(data_process.max_nums[tag_split]):
@@ -612,7 +612,7 @@ def test_intensity_and_save(input_test):
                 predict_first = input_test['predict_first']
             )
             #
-            #print "validating for ", tag_split
+            #print("validating for "), tag_split
             if input_test['model'] == 'hawkes':
                 lambda_samples_numpy, num_of_samples_numpy = control.model_dev_lambda(
                     data_process.seq_type_event_hawkes_numpy,
@@ -666,7 +666,7 @@ def test_intensity_and_save(input_test):
             )
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         #
         dev_end = time.time()
@@ -705,12 +705,12 @@ def test_intensity_and_save(input_test):
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the gold model is : ", input_test['path_gold']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
+        print("the model is : "), input_test['path_pre_train']
+        print("the gold model is : "), input_test['path_gold']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
         #
-    print "finish testing"
+    print("finish testing")
     #
 #
 # Hawkes process with inhibition
@@ -761,7 +761,7 @@ def train_hawkesinhib_ctsm(input_train):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -783,7 +783,7 @@ def train_hawkesinhib_ctsm(input_train):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -806,17 +806,17 @@ def train_hawkesinhib_ctsm(input_train):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood, total_log_likelihood_time, total_log_likelihood_type = 0.0, 0.0, 0.0
         total_num_of_events = 0.0
@@ -826,7 +826,7 @@ def train_hawkesinhib_ctsm(input_train):
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -838,7 +838,7 @@ def train_hawkesinhib_ctsm(input_train):
                 predict_first = input_train['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_learn(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -876,13 +876,13 @@ def train_hawkesinhib_ctsm(input_train):
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -904,7 +904,7 @@ def train_hawkesinhib_ctsm(input_train):
                         predict_first = input_train['predict_first']
                     )
                     #
-                    #print "validating ... "
+                    #print("validating ... ")
                     log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                         #data_process.seq_time_to_end_numpy,
                         data_process.seq_time_to_current_numpy,
@@ -924,7 +924,7 @@ def train_hawkesinhib_ctsm(input_train):
                     total_num_of_events_dev += num_of_events_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -958,7 +958,7 @@ def train_hawkesinhib_ctsm(input_train):
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
 #
 #
@@ -997,7 +997,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -1017,7 +1017,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -1040,7 +1040,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -1054,7 +1054,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
         #
         dev_start = time.time()
         #
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         total_log_likelihood_dev = 0.0
         total_log_likelihood_time_dev = 0.0
@@ -1073,7 +1073,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
                 predict_first = input_test['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -1108,7 +1108,7 @@ def test_hawkesinhib_ctsm_and_save(input_test):
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -1160,16 +1160,16 @@ def test_hawkesinhib_ctsm_and_save(input_test):
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
         #
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
-    print "finish testing"
+    print("finish testing")
 #
 #
 #
@@ -1235,7 +1235,7 @@ def train_generalized_neural_hawkes_ctsm_time(
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -1257,12 +1257,12 @@ def train_generalized_neural_hawkes_ctsm_time(
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
     #
-    print "get time quantiles ... "
+    print("get time quantiles ... ")
     data_process.get_time_quantiles()
     #
 
@@ -1294,26 +1294,26 @@ def train_generalized_neural_hawkes_ctsm_time(
             model_settings
         )
     elif tag_neural_type == 'simple':
-        print "simple version of neural hawkes with time encoder NOT implemented ... "
+        print("simple version of neural hawkes with time encoder NOT implemented ... ")
     else:
-        print "not implemented"
+        print("not implemented")
     #
     compile_end = time.time()
     compile_time = compile_end - compile_start
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood = 0.0
         total_log_likelihood_time = 0.0
@@ -1328,7 +1328,7 @@ def train_generalized_neural_hawkes_ctsm_time(
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -1378,7 +1378,7 @@ def train_generalized_neural_hawkes_ctsm_time(
                     data_process.seq_mask_numpy,
                     time_diffs_numpy
                 )
-                #print "gradient absoluate value : ", grad_numpy
+                #print("gradient absoluate value : "), grad_numpy
             #
             #
             log_dict['iteration'] += 1
@@ -1419,13 +1419,13 @@ def train_generalized_neural_hawkes_ctsm_time(
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -1492,7 +1492,7 @@ def train_generalized_neural_hawkes_ctsm_time(
                             data_process.seq_mask_numpy,
                             time_diffs_numpy
                         )
-                        #print "gradient absoluate value : ", grad_numpy
+                        #print("gradient absoluate value : "), grad_numpy
                         #
                     #
                     total_log_likelihood_dev += log_likelihood_numpy
@@ -1504,7 +1504,7 @@ def train_generalized_neural_hawkes_ctsm_time(
                     total_square_errors_dev += square_errors_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -1566,12 +1566,12 @@ def train_generalized_neural_hawkes_ctsm_time(
                         #
                         control.save_model(save_file)
                 else:
-                    print "what tracker ? "
+                    print("what tracker ? ")
                 #
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
     #
 #
@@ -1638,7 +1638,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -1661,12 +1661,12 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
     #
-    print "get time quantiles ... "
+    print("get time quantiles ... ")
     data_process.get_time_quantiles()
     #
 
@@ -1698,26 +1698,26 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
             model_settings
         )
     elif tag_neural_type == 'simple':
-        print "simple version of neural hawkes with time encoder NOT implemented ... "
+        print("simple version of neural hawkes with time encoder NOT implemented ... ")
     else:
-        print "not implemented"
+        print("not implemented")
     #
     compile_end = time.time()
     compile_time = compile_end - compile_start
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood = 0.0
         total_log_likelihood_time = 0.0
@@ -1732,7 +1732,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -1782,7 +1782,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
                     data_process.seq_mask_numpy,
                     time_diffs_numpy
                 )
-                #print "gradient absoluate value : ", grad_numpy
+                #print("gradient absoluate value : "), grad_numpy
             #
             #
             log_dict['iteration'] += 1
@@ -1823,7 +1823,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
@@ -1834,7 +1834,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
                 )
                 #
                 #
-                print "Now we start testing after training one epoch ... "
+                print("Now we start testing after training one epoch ... ")
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -1901,7 +1901,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
                             data_process.seq_mask_numpy,
                             time_diffs_numpy
                         )
-                        #print "gradient absoluate value : ", grad_numpy
+                        #print("gradient absoluate value : "), grad_numpy
                         #
                     #
                     total_log_likelihood_dev += log_likelihood_numpy
@@ -1913,7 +1913,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
                     total_square_errors_dev += square_errors_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 name_file = 'model'+str(
@@ -1957,7 +1957,7 @@ def train_generalized_neural_hawkes_ctsm_time_DevIncludedSetting(
                 #
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
     #
 #
@@ -2006,7 +2006,7 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
     #
     #
     data_process = data_processers.DataProcesser(
@@ -2027,12 +2027,12 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
     #
-    #print "get time quantiles ... "
+    #print("get time quantiles ... ")
     #data_process.get_time_quantiles()
     #
 
@@ -2065,9 +2065,9 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
             model_settings
         )
     elif tag_neural_type == 'simple':
-        print "simple version of neural hawkes with time encoder NOT implemented ... "
+        print("simple version of neural hawkes with time encoder NOT implemented ... ")
     else:
-        print "not implemented"
+        print("not implemented")
     #
 
     compile_end = time.time()
@@ -2075,7 +2075,7 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -2089,7 +2089,7 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
         #
         dev_start = time.time()
         #
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         total_log_likelihood_dev = 0.0
         total_log_likelihood_time_dev = 0.0
@@ -2099,7 +2099,7 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
         for step_dev in range(data_process.max_nums[tag_split] ):
             #
             #TODO; print for debug : floating point exp
-            #print "step : ", step_dev
+            #print("step : "), step_dev
             #
             data_process.process_data(
                 tag_batch = tag_split,
@@ -2111,8 +2111,8 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
                 predict_first = input_test['predict_first']
             )
             #
-            #print "validating ... "
-            #print "training ... "
+            #print("validating ... ")
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -2146,7 +2146,7 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -2196,17 +2196,17 @@ def test_generalized_neural_hawkes_ctsm_and_save_time(
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
 
         #
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
-    print "finish testing and saving "
+    print("finish testing and saving ")
 #
 #
 #
@@ -2274,7 +2274,7 @@ def train_neural_hawkes_ctsm(input_train):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -2296,7 +2296,7 @@ def train_neural_hawkes_ctsm(input_train):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -2323,17 +2323,17 @@ def train_neural_hawkes_ctsm(input_train):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood = 0.0
         total_log_likelihood_time = 0.0
@@ -2345,7 +2345,7 @@ def train_neural_hawkes_ctsm(input_train):
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -2357,7 +2357,7 @@ def train_neural_hawkes_ctsm(input_train):
                 predict_first = input_train['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_learn(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -2396,13 +2396,13 @@ def train_neural_hawkes_ctsm(input_train):
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -2424,7 +2424,7 @@ def train_neural_hawkes_ctsm(input_train):
                         predict_first = input_train['predict_first']
                     )
                     #
-                    #print "validating ... "
+                    #print("validating ... ")
                     log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                         #data_process.seq_time_to_end_numpy,
                         data_process.seq_time_to_current_numpy,
@@ -2444,7 +2444,7 @@ def train_neural_hawkes_ctsm(input_train):
                     total_num_of_events_dev += num_of_events_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -2478,7 +2478,7 @@ def train_neural_hawkes_ctsm(input_train):
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
     #
 #
@@ -2518,7 +2518,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -2538,7 +2538,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -2565,7 +2565,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -2579,7 +2579,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
         #
         dev_start = time.time()
         #
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         total_log_likelihood_dev = 0.0
         total_log_likelihood_time_dev = 0.0
@@ -2598,7 +2598,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
                 predict_first = input_test['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -2631,7 +2631,7 @@ def test_neural_hawkes_ctsm_and_save(input_test):
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -2680,16 +2680,16 @@ def test_neural_hawkes_ctsm_and_save(input_test):
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
         #
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
-    print "finish testing"
+    print("finish testing")
 #
 #
 #
@@ -2745,7 +2745,7 @@ def train_generalized_neural_hawkes_ctsm(
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -2767,7 +2767,7 @@ def train_generalized_neural_hawkes_ctsm(
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -2798,24 +2798,24 @@ def train_generalized_neural_hawkes_ctsm(
             model_settings
         )
     else:
-        print "not implemented"
+        print("not implemented")
     #
     compile_end = time.time()
     compile_time = compile_end - compile_start
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood = 0.0
         total_log_likelihood_time = 0.0
@@ -2827,7 +2827,7 @@ def train_generalized_neural_hawkes_ctsm(
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -2839,7 +2839,7 @@ def train_generalized_neural_hawkes_ctsm(
                 predict_first = input_train['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_learn(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -2878,13 +2878,13 @@ def train_generalized_neural_hawkes_ctsm(
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -2906,7 +2906,7 @@ def train_generalized_neural_hawkes_ctsm(
                         predict_first = input_train['predict_first']
                     )
                     #
-                    #print "validating ... "
+                    #print("validating ... ")
                     log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                         #data_process.seq_time_to_end_numpy,
                         data_process.seq_time_to_current_numpy,
@@ -2926,7 +2926,7 @@ def train_generalized_neural_hawkes_ctsm(
                     total_num_of_events_dev += num_of_events_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -2960,7 +2960,7 @@ def train_generalized_neural_hawkes_ctsm(
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
     #
 #
@@ -3007,7 +3007,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -3027,7 +3027,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -3059,7 +3059,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
             model_settings
         )
     else:
-        print "not implemented"
+        print("not implemented")
     #
 
     compile_end = time.time()
@@ -3067,7 +3067,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -3081,7 +3081,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
         #
         dev_start = time.time()
         #
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         total_log_likelihood_dev = 0.0
         total_log_likelihood_time_dev = 0.0
@@ -3100,7 +3100,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
                 predict_first = input_test['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -3133,7 +3133,7 @@ def test_generalized_neural_hawkes_ctsm_and_save(
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -3182,16 +3182,16 @@ def test_generalized_neural_hawkes_ctsm_and_save(
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
         #
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
-    print "finish testing and saving "
+    print("finish testing and saving ")
 #
 #
 #
@@ -3251,7 +3251,7 @@ def train_neural_hawkes_ctsm_time(input_train):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -3273,12 +3273,12 @@ def train_neural_hawkes_ctsm_time(input_train):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
     #
-    print "get time quantiles ... "
+    print("get time quantiles ... ")
     data_process.get_time_quantiles()
     #
     model_settings = {
@@ -3307,17 +3307,17 @@ def train_neural_hawkes_ctsm_time(input_train):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
-    print "building training log ... "
+    print("building training log ... ")
     log_dict['compile_time'] = round(compile_time, 0)
     data_process.track_log(log_dict)
     log_dict['mode'] = 'continue'
 
     for epi in range(log_dict['max_epoch']):
         #
-        print "training epoch ", epi
+        print("training epoch "), epi
         #
         total_log_likelihood = 0.0
         total_log_likelihood_time = 0.0
@@ -3329,7 +3329,7 @@ def train_neural_hawkes_ctsm_time(input_train):
         for step_train in range(data_process.max_nums['train'] ):
             #
             train_start = time.time()
-            #print "the step is ", step
+            #print("the step is "), step
             #
             data_process.process_data(
                 tag_batch = 'train',
@@ -3341,7 +3341,7 @@ def train_neural_hawkes_ctsm_time(input_train):
                 predict_first = input_train['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_learn(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -3381,13 +3381,13 @@ def train_neural_hawkes_ctsm_time(input_train):
             )
             #
             if step_train % 10 == 9:
-                print "in training, the step is out of ", step_train, data_process.max_nums['train']
+                print("in training, the step is out of "), step_train, data_process.max_nums['train']
             ########
             # Now we track the performance and save the model for every # batches, so that we do not miss the convergence within the epoch -- one epoch is too large sometimes
             ########
             if log_dict['iteration'] % log_dict['track_period'] == 0:
                 #TODO: go through the dev data and calculate the dev metrics
-                print "Now we start validating after batches ", log_dict['track_period']
+                print("Now we start validating after batches "), log_dict['track_period']
                 dev_start = time.time()
                 #
                 #TODO: get the dev loss values
@@ -3409,7 +3409,7 @@ def train_neural_hawkes_ctsm_time(input_train):
                         predict_first = input_train['predict_first']
                     )
                     #
-                    #print "validating ... "
+                    #print("validating ... ")
                     log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                         #data_process.seq_time_to_end_numpy,
                         data_process.seq_time_to_current_numpy,
@@ -3430,7 +3430,7 @@ def train_neural_hawkes_ctsm_time(input_train):
                     total_num_of_events_dev += num_of_events_numpy
                     #
                     if step_dev % 10 == 9:
-                        print "in dev, the step is out of ", step_dev, data_process.max_nums['dev']
+                        print("in dev, the step is out of "), step_dev, data_process.max_nums['dev']
                 #
                 #
                 log_dict['tracked']['dev_log_likelihood'] = round(
@@ -3464,7 +3464,7 @@ def train_neural_hawkes_ctsm_time(input_train):
                 data_process.track_log(log_dict)
             ########
     data_process.finish_log(log_dict)
-    print "finish training"
+    print("finish training")
     #
     #
 #
@@ -3505,7 +3505,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
     }
 
     #TODO: get the data and process the data
-    print "reading and processing data ... "
+    print("reading and processing data ... ")
 
     data_process = data_processers.DataProcesser(
         {
@@ -3525,7 +3525,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
         data_process.prune_stream(prune_stream)
     #
     #TODO: build the model
-    print "building model ... "
+    print("building model ... ")
 
     compile_start = time.time()
 
@@ -3552,7 +3552,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
 
     #'''
 
-    print "model finished, comilation time is ", round(compile_time, 0)
+    print("model finished, comilation time is "), round(compile_time, 0)
 
     #TODO: start training, define the training functions
     tag_split = input_test['tag_split']
@@ -3566,7 +3566,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
         #
         dev_start = time.time()
         #
-        print "validating for ", tag_split
+        print("validating for "), tag_split
         #
         total_log_likelihood_dev = 0.0
         total_log_likelihood_time_dev = 0.0
@@ -3585,7 +3585,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
                 predict_first = input_test['predict_first']
             )
             #
-            #print "training ... "
+            #print("training ... ")
             log_likelihood_numpy, log_likelihood_time_numpy, log_likelihood_type_numpy, num_of_events_numpy = control.model_dev(
                 #data_process.seq_time_to_end_numpy,
                 data_process.seq_time_to_current_numpy,
@@ -3619,7 +3619,7 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
             total_num_of_events_dev += num_of_events_numpy
             #
             if step_dev % 100 == 99:
-                print "in validation, the step is out of ", step_dev, data_process.max_nums[tag_split]
+                print("in validation, the step is out of "), step_dev, data_process.max_nums[tag_split]
             #
         log_likelihood_final = round(
             total_log_likelihood_dev / total_num_of_events_dev, 4
@@ -3668,16 +3668,16 @@ def test_neural_hawkes_ctsm_and_save_time(input_test):
             pickle.dump(dict_results, f)
         #
         #
-        print "the model is : ", input_test['path_pre_train']
-        print "the dataset is : ", input_test['path_rawdata']
-        print "the tag split is : ", tag_split
-        print "the log-likelihood of seq is : ", log_likelihood_final
-        print "the log-likelihood of type is : ", log_likelihood_type_final
-        print "the log-likelihood of time is : ", log_likelihood_time_final
+        print("the model is : "), input_test['path_pre_train']
+        print("the dataset is : "), input_test['path_rawdata']
+        print("the tag split is : "), tag_split
+        print("the log-likelihood of seq is : "), log_likelihood_final
+        print("the log-likelihood of type is : "), log_likelihood_type_final
+        print("the log-likelihood of time is : "), log_likelihood_time_final
         #
-        print "the three values in the order of seq / type / time : is " + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
+        print("the three values in the order of seq / type / time : is ") + str(log_likelihood_final) + ' / ' + str(log_likelihood_type_final) + ' / ' + str(log_likelihood_time_final)
         #
-    print "finish testing and saving "
+    print("finish testing and saving ")
 #
 #
 #
